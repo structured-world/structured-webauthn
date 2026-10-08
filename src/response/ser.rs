@@ -31,7 +31,7 @@ impl Serialize for AuthenticatorTransport {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::response::AuthenticatorTransport;
+    /// # use structured_webauthn::response::AuthenticatorTransport;
     /// assert_eq!(
     ///     serde_json::to_string(&AuthenticatorTransport::Usb)?,
     ///     r#""usb""#
@@ -62,7 +62,7 @@ impl<'de> Deserialize<'de> for AuthenticatorTransport {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::response::AuthenticatorTransport;
+    /// # use structured_webauthn::response::AuthenticatorTransport;
     /// assert!(matches!(
     ///     serde_json::from_str::<AuthenticatorTransport>(r#""usb""#)?,
     ///     AuthenticatorTransport::Usb
@@ -116,7 +116,7 @@ impl Serialize for AuthTransports {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::response::{AuthTransports, AuthenticatorTransport};
+    /// # use structured_webauthn::response::{AuthTransports, AuthenticatorTransport};
     /// # #[cfg(feature = "custom")]
     /// assert_eq!(
     ///     serde_json::to_string(&AuthTransports::ALL)?,
@@ -184,7 +184,7 @@ impl<'de> Deserialize<'de> for AuthTransports {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::response::{AuthTransports, AuthenticatorTransport};
+    /// # use structured_webauthn::response::{AuthTransports, AuthenticatorTransport};
     /// # #[cfg(feature = "custom")]
     /// assert_eq!(
     ///     serde_json::from_str::<AuthTransports>(
@@ -230,7 +230,7 @@ impl<T: AsRef<[u8]>> Serialize for CredentialId<T> {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::response::CredentialId;
+    /// # use structured_webauthn::response::CredentialId;
     /// // `CredentialId::try_from` only exists when `custom` is enabled; and even then, it is
     /// // likely never needed since the `CredentialId` was originally sent from the client and is likely
     /// // stored in a database which would be fetched by `UserHandle` or `Authentication::raw_id`.
@@ -239,7 +239,7 @@ impl<T: AsRef<[u8]>> Serialize for CredentialId<T> {
     ///     serde_json::to_string(&CredentialId::try_from(vec![0; 16].into_boxed_slice())?).unwrap(),
     ///     r#""AAAAAAAAAAAAAAAAAAAAAA""#
     /// );
-    /// # Ok::<_, webauthn_rp::AggErr>(())
+    /// # Ok::<_, structured_webauthn::AggErr>(())
     ///```
     #[inline]
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -256,13 +256,13 @@ impl<'de> Deserialize<'de> for CredentialId<Box<[u8]>> {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::response::CredentialId;
+    /// # use structured_webauthn::response::CredentialId;
     /// # #[cfg(feature = "custom")]
     /// assert_eq!(
     ///     serde_json::from_str::<CredentialId<_>>(r#""AAAAAAAAAAAAAAAAAAAAAA""#).unwrap(),
     ///     CredentialId::try_from(vec![0; 16].into_boxed_slice())?
     /// );
-    /// # Ok::<_, webauthn_rp::AggErr>(())
+    /// # Ok::<_, structured_webauthn::AggErr>(())
     ///```
     #[inline]
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
@@ -306,7 +306,7 @@ impl<'de> Deserialize<'de> for AuthenticatorAttachment {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::response::AuthenticatorAttachment;
+    /// # use structured_webauthn::response::AuthenticatorAttachment;
     /// assert!(matches!(
     ///     serde_json::from_str::<AuthenticatorAttachment>(r#""cross-platform""#)?,
     ///     AuthenticatorAttachment::CrossPlatform)
@@ -393,7 +393,7 @@ impl<'de> Deserialize<'de> for SentChallenge {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::response::SentChallenge;
+    /// # use structured_webauthn::response::SentChallenge;
     /// assert_eq!(
     ///     serde_json::from_slice::<SentChallenge>(br#""AAAAAAAAAAAAAAAAAAAAAA""#)?,
     ///     SentChallenge(0)
@@ -448,7 +448,7 @@ impl<'de: 'a, 'a> Deserialize<'de> for Origin<'a> {
     /// ```
     /// # extern crate alloc;
     /// # use alloc::borrow::Cow;
-    /// # use webauthn_rp::response::Origin;
+    /// # use structured_webauthn::response::Origin;
     /// let origin_borrowed = "https://example.com";
     /// let origin_owned = "\\\\https://example.com";
     /// assert!(
@@ -796,8 +796,8 @@ where
     /// ```
     /// # use core::str::FromStr;
     /// # #[cfg(feature = "bin")]
-    /// # use webauthn_rp::bin::Decode;
-    /// # use webauthn_rp::{
+    /// # use structured_webauthn::bin::Decode;
+    /// # use structured_webauthn::{
     /// #     request::{register::{UserHandle, USER_HANDLE_MIN_LEN}, AsciiDomain, RpId},
     /// #     response::{error::CredentialIdErr, AllAcceptedCredentialsOptions, CredentialId},
     /// # };
@@ -825,7 +825,7 @@ where
     ///     .unwrap(),
     ///     r#"{"rpId":"example.com","userId":"AA","allAcceptedCredentialIds":["AAAAAAAAAAAAAAAAAAAAAA"]}"#
     /// );
-    /// # Ok::<_, webauthn_rp::AggErr>(())
+    /// # Ok::<_, structured_webauthn::AggErr>(())
     /// ```
     #[inline]
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -859,8 +859,8 @@ where
     /// ```
     /// # use core::str::FromStr;
     /// # #[cfg(feature = "bin")]
-    /// # use webauthn_rp::bin::Decode;
-    /// # use webauthn_rp::{
+    /// # use structured_webauthn::bin::Decode;
+    /// # use structured_webauthn::{
     /// #     request::{register::{PublicKeyCredentialUserEntity, UserHandle, USER_HANDLE_MIN_LEN}, AsciiDomain, RpId},
     /// #     response::CurrentUserDetailsOptions,
     /// #     AggErr,

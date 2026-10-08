@@ -205,7 +205,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::{request::register::{UserHandle, USER_HANDLE_MIN_LEN}, response::auth::ser_relaxed::CustomAuthentication};
+    /// # use structured_webauthn::{request::register::{UserHandle, USER_HANDLE_MIN_LEN}, response::auth::ser_relaxed::CustomAuthentication};
     /// assert!(
     ///     // The below payload is technically valid, but `AuthenticationServerState::verify` will fail
     ///     // since the authenticatorData is not valid. This is true for `Authentication::deserialize`

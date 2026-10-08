@@ -591,7 +591,6 @@ impl<'prf_first, 'prf_second> Extension<'prf_first, 'prf_second> {
         }
     }
     /// Same as [`Self::none`] except [`Self::prf`] is `Some` containing `input` and `info`.
-    #[expect(single_use_lifetimes, reason = "false positive")]
     #[inline]
     #[must_use]
     pub const fn with_prf<'a: 'prf_first, 'b: 'prf_second>(
@@ -683,7 +682,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::register::{UserHandle, UserHandle64, USER_HANDLE_MIN_LEN, USER_HANDLE_MAX_LEN};
+    /// # use structured_webauthn::request::register::{UserHandle, UserHandle64, USER_HANDLE_MIN_LEN, USER_HANDLE_MAX_LEN};
     /// assert_eq!(
     ///     UserHandle::<USER_HANDLE_MIN_LEN>::new()
     ///         .as_ref()
@@ -753,7 +752,7 @@ impl UserHandle16 {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::register::UserHandle16;
+    /// # use structured_webauthn::request::register::UserHandle16;
     /// assert!(UserHandle16::new_uuid_v4().is_uuid_v4());
     /// ```
     #[inline]
@@ -775,7 +774,7 @@ impl UserHandle16 {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::register::UserHandle16;
+    /// # use structured_webauthn::request::register::UserHandle16;
     /// assert!(UserHandle16::new_uuid_v4().is_uuid_v4());
     /// let mut user = UserHandle16::new_uuid_v4().into_array();
     /// user[6] = 255;
@@ -796,7 +795,7 @@ impl UserHandle16 {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::register::UserHandle16;
+    /// # use structured_webauthn::request::register::UserHandle16;
     /// let mut user = UserHandle16::new_uuid_v4().into_array();
     /// assert!(UserHandle16::from_uuid_v4(user).is_some());
     /// user[8] = 255;
@@ -897,7 +896,7 @@ impl AuthenticatorSelectionCriteria {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::{request::{
+    /// # use structured_webauthn::{request::{
     /// #     register::{
     /// #         AuthenticatorSelectionCriteria, ResidentKeyRequirement,
     /// #     },
@@ -935,7 +934,7 @@ impl AuthenticatorSelectionCriteria {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::{request::{
+    /// # use structured_webauthn::{request::{
     /// #     register::{
     /// #         AuthenticatorSelectionCriteria, ResidentKeyRequirement,
     /// #     },
@@ -1045,7 +1044,6 @@ impl<
 {
     /// Sets [`Self::mediation`] to [`CredentialMediationRequirement::default`] and
     /// [`Self::public_key`] to [`PublicKeyCredentialCreationOptions::passkey`].
-    #[expect(single_use_lifetimes, reason = "false positive")]
     #[inline]
     #[must_use]
     pub fn passkey<'a: 'rp_id, 'b: 'user_name, 'c: 'user_display_name, 'd: 'user_id>(
@@ -1064,7 +1062,6 @@ impl<
     }
     /// Sets [`Self::mediation`] to [`CredentialMediationRequirement::default`] and
     /// [`Self::public_key`] to [`PublicKeyCredentialCreationOptions::second_factor`].
-    #[expect(single_use_lifetimes, reason = "false positive")]
     #[inline]
     #[must_use]
     pub fn second_factor<'a: 'rp_id, 'b: 'user_name, 'c: 'user_display_name, 'd: 'user_id>(
@@ -1097,8 +1094,8 @@ impl<
     /// # #[cfg(not(feature = "serializable_server_state"))]
     /// # use std::time::Instant;
     /// # #[cfg(not(feature = "serializable_server_state"))]
-    /// # use webauthn_rp::request::TimedCeremony as _;
-    /// # use webauthn_rp::request::{
+    /// # use structured_webauthn::request::TimedCeremony as _;
+    /// # use structured_webauthn::request::{
     /// #     register::{CredentialCreationOptions, PublicKeyCredentialUserEntity, UserHandle64},
     /// #     AsciiDomain, RpId
     /// # };
@@ -1114,7 +1111,7 @@ impl<
     ///         Vec::new()
     ///     ).start_ceremony()?.0.expiration() > Instant::now()
     /// );
-    /// # Ok::<_, webauthn_rp::AggErr>(())
+    /// # Ok::<_, structured_webauthn::AggErr>(())
     /// ```
     #[inline]
     pub fn start_ceremony(
@@ -1287,7 +1284,7 @@ impl<'rp_id, 'user_name, 'user_display_name, 'user_id, const USER_LEN: usize>
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::{
+    /// # use structured_webauthn::request::{
     /// #     register::{
     /// #         PublicKeyCredentialCreationOptions, PublicKeyCredentialUserEntity, UserHandle64
     /// #     },
@@ -1305,9 +1302,8 @@ impl<'rp_id, 'user_name, 'user_display_name, 'user_id, const USER_LEN: usize>
     ///     )
     ///     .authenticator_selection.user_verification, UserVerificationRequirement::Required
     /// ));
-    /// # Ok::<_, webauthn_rp::AggErr>(())
+    /// # Ok::<_, structured_webauthn::AggErr>(())
     /// ```
-    #[expect(single_use_lifetimes, reason = "false positive")]
     #[inline]
     #[must_use]
     pub fn passkey<'a: 'rp_id, 'b: 'user_name, 'c: 'user_display_name, 'd: 'user_id>(
@@ -1361,7 +1357,7 @@ impl<'rp_id, 'user_name, 'user_display_name, 'user_id, const USER_LEN: usize>
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::{register::{
+    /// # use structured_webauthn::request::{register::{
     /// #     PublicKeyCredentialCreationOptions, PublicKeyCredentialUserEntity, UserHandle64
     /// # }, AsciiDomain, RpId};
     /// assert_eq!(
@@ -1378,9 +1374,8 @@ impl<'rp_id, 'user_name, 'user_display_name, 'user_id, const USER_LEN: usize>
     ///     .get(),
     ///     300_000
     /// );
-    /// # Ok::<_, webauthn_rp::AggErr>(())
+    /// # Ok::<_, structured_webauthn::AggErr>(())
     /// ```
-    #[expect(single_use_lifetimes, reason = "false positive")]
     #[inline]
     #[must_use]
     pub fn second_factor<'a: 'rp_id, 'b: 'user_name, 'c: 'user_display_name, 'd: 'user_id>(
@@ -1478,7 +1473,7 @@ impl<
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::{register::{
+    /// # use structured_webauthn::request::{register::{
     /// #     CoseAlgorithmIdentifiers, CredentialCreationOptions,
     /// #     PublicKeyCredentialUserEntity, UserHandle64,
     /// # }, AsciiDomain, RpId};
@@ -1499,7 +1494,7 @@ impl<
     ///     .rp_id.as_ref(),
     ///     "example.com"
     /// );
-    /// # Ok::<_, webauthn_rp::AggErr>(())
+    /// # Ok::<_, structured_webauthn::AggErr>(())
     /// ```
     #[inline]
     #[must_use]

@@ -1,3 +1,15 @@
+structured-webauthn
+Copyright (C) Dmitry Prudnikov
+
+This project started from webauthn_rp by Zack Newman
+(https://git.philomathiclife.com/repos/webauthn_rp), source taken at commit
+2ae8bb96c939cb21510afcbc0adc0f58ffe06c2b (2026-08-10). webauthn_rp is
+licensed under the MIT License or the Apache License, version 2.0, at the
+recipient's option; this project uses it under the Apache License, version
+2.0, and is distributed under that license (see LICENSE).
+
+The original copyright and MIT permission notice of webauthn_rp:
+
 Copyright © 2025 Zack Newman
 
 Permission is hereby granted, free of charge, to any person obtaining a

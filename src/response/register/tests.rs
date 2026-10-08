@@ -21,8 +21,6 @@ use rsa::sha2::{Digest as _, Sha256};
 #[expect(clippy::panic, reason = "OK in tests")]
 #[expect(
     clippy::arithmetic_side_effects,
-    clippy::indexing_slicing,
-    clippy::missing_asserts_for_indexing,
     reason = "comments justifies correctness"
 )]
 fn hex_decode<const N: usize>(input: &[u8; N]) -> Vec<u8> {
@@ -34,8 +32,7 @@ fn hex_decode<const N: usize>(input: &[u8; N]) -> Vec<u8> {
         "hex_decode must be passed a reference to an array of even length"
     );
     let mut data = Vec::with_capacity(N >> 1);
-    input.chunks_exact(2).fold((), |(), byte| {
-        // `byte.len() == 2`.
+    input.as_chunks::<2>().0.iter().fold((), |(), byte| {
         let mut hex = byte[0];
         let val = match hex {
             // `Won't underflow`.
@@ -44,7 +41,6 @@ fn hex_decode<const N: usize>(input: &[u8; N]) -> Vec<u8> {
             b'a'..=b'f' => hex - LOWER_OFFSET,
             _ => panic!("hex_decode must be passed a valid lowercase hexadecimal array"),
         } << 4u8;
-        // `byte.len() == 2`.
         hex = byte[1];
         data.push(
             val | match hex {
@@ -299,7 +295,7 @@ fn auth_ext() -> Result<(), AuthenticatorExtensionOutputErr> {
     });
     let CborSuccess { value, remaining } =
         AuthenticatorExtensionOutput::from_cbor(opts.as_slice())?;
-    assert!(remaining.is_empty());
+    assert_eq!(remaining, [0u8; 0]);
     assert!(value.missing());
     opts = generate_auth_extensions(&AuthExtOptions {
         cred_protect: None,
@@ -321,7 +317,7 @@ fn auth_ext() -> Result<(), AuthenticatorExtensionOutputErr> {
     });
     let CborSuccess { value, remaining } =
         AuthenticatorExtensionOutput::from_cbor(opts.as_slice())?;
-    assert!(remaining.is_empty());
+    assert_eq!(remaining, [0u8; 0]);
     assert!(
         matches!(value.cred_protect, CredentialProtectionPolicy::None)
             && matches!(value.hmac_secret, HmacSecret::One)
@@ -371,7 +367,7 @@ fn auth_ext() -> Result<(), AuthenticatorExtensionOutputErr> {
     });
     let CborSuccess { value, remaining } =
         AuthenticatorExtensionOutput::from_cbor(opts.as_slice())?;
-    assert!(remaining.is_empty());
+    assert_eq!(remaining, [0u8; 0]);
     assert!(
         matches!(
             value.cred_protect,

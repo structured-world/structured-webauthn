@@ -23,7 +23,7 @@ impl Serialize for CredentialMediationRequirement {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::CredentialMediationRequirement;
+    /// # use structured_webauthn::request::CredentialMediationRequirement;
     /// assert_eq!(
     ///     serde_json::to_string(&CredentialMediationRequirement::Required)?,
     ///     r#""required""#
@@ -54,7 +54,7 @@ impl Serialize for Challenge {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::Challenge;
+    /// # use structured_webauthn::request::Challenge;
     /// # // `Challenge::BASE64_LEN` is 22, but we add two for the quotes.
     /// assert_eq!(serde_json::to_string(&Challenge::new())?.len(), 24);
     /// # Ok::<_, serde_json::Error>(())
@@ -76,7 +76,7 @@ impl Serialize for AsciiDomain {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::AsciiDomain;
+    /// # use structured_webauthn::request::AsciiDomain;
     /// assert_eq!(
     ///     serde_json::to_string(&AsciiDomain::try_from("www.example.com".to_owned()).unwrap()).unwrap(),
     ///     r#""www.example.com""#
@@ -96,7 +96,7 @@ impl Serialize for AsciiDomainStatic {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::AsciiDomainStatic;
+    /// # use structured_webauthn::request::AsciiDomainStatic;
     /// assert_eq!(
     ///     serde_json::to_string(&AsciiDomainStatic::new("www.example.com").unwrap()).unwrap(),
     ///     r#""www.example.com""#
@@ -117,7 +117,7 @@ impl Serialize for Url {
     ///
     /// ```
     /// # use core::str::FromStr as _;
-    /// # use webauthn_rp::request::Url;
+    /// # use structured_webauthn::request::Url;
     /// assert_eq!(
     ///     serde_json::to_string(&Url::from_str("ssh:foo").unwrap()).unwrap(),
     ///     r#""ssh:foo""#
@@ -137,7 +137,7 @@ impl Serialize for RpId {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::{AsciiDomain, RpId};
+    /// # use structured_webauthn::request::{AsciiDomain, RpId};
     /// assert_eq!(
     ///     serde_json::to_string(&RpId::Domain(AsciiDomain::try_from("www.example.com".to_owned()).unwrap())).unwrap(),
     ///     r#""www.example.com""#
@@ -167,8 +167,8 @@ where
     ///
     /// ```
     /// # #[cfg(all(feature = "bin", feature = "custom"))]
-    /// # use webauthn_rp::{bin::Decode, response::bin::DecodeAuthTransportsErr};
-    /// # use webauthn_rp::{
+    /// # use structured_webauthn::{bin::Decode, response::bin::DecodeAuthTransportsErr};
+    /// # use structured_webauthn::{
     /// #     request::PublicKeyCredentialDescriptor,
     /// #     response::{AuthTransports, CredentialId},
     /// # };
@@ -191,7 +191,7 @@ where
     ///     serde_json::to_string(&PublicKeyCredentialDescriptor { id, transports }).unwrap(),
     ///     r#"{"type":"public-key","id":"AAAAAAAAAAAAAAAAAAAAAA","transports":["usb"]}"#
     /// );
-    /// # Ok::<_, webauthn_rp::AggErr>(())
+    /// # Ok::<_, structured_webauthn::AggErr>(())
     /// ```
     #[inline]
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -217,7 +217,7 @@ impl Serialize for UserVerificationRequirement {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::UserVerificationRequirement;
+    /// # use structured_webauthn::request::UserVerificationRequirement;
     /// assert_eq!(
     ///     serde_json::to_string(&UserVerificationRequirement::Required)?,
     ///     r#""required""#
@@ -257,7 +257,7 @@ impl Serialize for PublicKeyCredentialHint {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::PublicKeyCredentialHint;
+    /// # use structured_webauthn::request::PublicKeyCredentialHint;
     /// assert_eq!(
     ///     serde_json::to_string(&PublicKeyCredentialHint::SecurityKey)?,
     ///     r#""security-key""#
@@ -291,7 +291,7 @@ impl Serialize for Hints {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::{Hints, PublicKeyCredentialHint};
+    /// # use structured_webauthn::request::{Hints, PublicKeyCredentialHint};
     /// assert_eq!(
     ///     serde_json::to_string(&Hints::EMPTY)?,
     ///     r#"[]"#
@@ -442,7 +442,7 @@ impl Serialize for PrfInput<'_, '_> {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::{PrfInput, ExtensionReq};
+    /// # use structured_webauthn::request::{PrfInput, ExtensionReq};
     /// assert_eq!(
     ///     serde_json::to_string(&PrfInput {
     ///         first: [0; 4].as_slice(),
@@ -579,7 +579,7 @@ impl<'de> Deserialize<'de> for AsciiDomain {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::AsciiDomain;
+    /// # use structured_webauthn::request::AsciiDomain;
     /// assert!(matches!(
     ///     serde_json::from_str::<AsciiDomain>(r#""example.com""#)?.as_ref(),
     ///     "example.com"
@@ -600,7 +600,7 @@ impl Deserialize<'static> for AsciiDomainStatic {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::AsciiDomainStatic;
+    /// # use structured_webauthn::request::AsciiDomainStatic;
     /// assert!(matches!(
     ///     serde_json::from_str::<AsciiDomainStatic>(r#""example.com""#)?.as_str(),
     ///     "example.com"
@@ -624,7 +624,7 @@ impl<'de> Deserialize<'de> for Url {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::Url;
+    /// # use structured_webauthn::request::Url;
     /// assert!(matches!(
     ///     serde_json::from_str::<Url>(r#""ssh:foo""#)?.as_ref(),
     ///     "ssh:foo"
@@ -659,7 +659,7 @@ impl<'de> Deserialize<'de> for RpId {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::RpId;
+    /// # use structured_webauthn::request::RpId;
     /// assert!(matches!(
     ///     serde_json::from_str::<RpId>(r#""example.com""#)?.as_ref(),
     ///     "example.com"
@@ -687,7 +687,7 @@ impl<'de> Deserialize<'de> for PublicKeyCredentialHint {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::PublicKeyCredentialHint;
+    /// # use structured_webauthn::request::PublicKeyCredentialHint;
     /// assert_eq!(
     ///     serde_json::from_str::<PublicKeyCredentialHint>(r#""security-key""#)?,
     ///     PublicKeyCredentialHint::SecurityKey,
@@ -747,7 +747,7 @@ impl<'de> Deserialize<'de> for Hints {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::{Hints, PublicKeyCredentialHint};
+    /// # use structured_webauthn::request::{Hints, PublicKeyCredentialHint};
     /// assert_eq!(
     ///     serde_json::from_str::<Hints>(r#"["security-key", "hybrid", "client-device"]"#)?,
     ///     Hints::EMPTY
@@ -810,7 +810,7 @@ impl<'de> Deserialize<'de> for CredentialMediationRequirement {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::CredentialMediationRequirement;
+    /// # use structured_webauthn::request::CredentialMediationRequirement;
     /// assert!(
     ///     matches!(
     ///         serde_json::from_str(r#""required""#)?,

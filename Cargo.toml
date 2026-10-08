@@ -1,70 +1,76 @@
 [package]
-authors = ["Zack Newman <zack@philomathiclife.com>"]
+authors = [
+  "Zack Newman <zack@philomathiclife.com>",
+  "Dmitry Prudnikov <mail@polaz.com>",
+]
 categories = ["api-bindings", "authentication", "web-programming"]
-description = "Server-side Web Authentication (WebAuthn) Relying Party (RP) API."
-documentation = "https://docs.rs/webauthn_rp/latest/webauthn_rp/"
+description = "Server-side Web Authentication (WebAuthn) Relying Party (RP) API in pure Rust: registration and authentication ceremonies, passkeys, no OpenSSL."
+documentation = "https://docs.rs/structured-webauthn"
 edition = "2024"
 keywords = ["authentication", "fido2", "passkey", "rp", "webauthn"]
-license = "MIT OR Apache-2.0"
-name = "webauthn_rp"
+license = "Apache-2.0"
+name = "structured-webauthn"
 readme = "README.md"
-repository = "https://git.philomathiclife.com/repos/webauthn_rp/"
-rust-version = "1.97.1"
-version = "0.4.0+spec-3"
+repository = "https://github.com/structured-world/structured-webauthn"
+rust-version = "1.99.0"
+version = "0.1.0"
 
 [lints.rust]
-deprecated-safe = { level = "deny", priority = -1 }
-future-incompatible = { level = "deny", priority = -1 }
-keyword-idents = { level = "deny", priority = -1 }
-let-underscore = { level = "deny", priority = -1 }
-nonstandard-style = { level = "deny", priority = -1 }
-refining-impl-trait = { level = "deny", priority = -1 }
-rust-2018-compatibility = { level = "deny", priority = -1 }
-rust-2018-idioms = { level = "deny", priority = -1 }
-rust-2021-compatibility = { level = "deny", priority = -1 }
-rust-2024-compatibility = { level = "deny", priority = -1 }
-unknown-or-malformed-diagnostic-attributes = { level = "deny", priority = -1 }
+deprecated_safe = { level = "deny", priority = -1 }
+future_incompatible = { level = "deny", priority = -1 }
+keyword_idents = { level = "deny", priority = -1 }
+let_underscore = { level = "deny", priority = -1 }
+nonstandard_style = { level = "deny", priority = -1 }
+refining_impl_trait = { level = "deny", priority = -1 }
+rust_2018_compatibility = { level = "deny", priority = -1 }
+rust_2018_idioms = { level = "deny", priority = -1 }
+rust_2021_compatibility = { level = "deny", priority = -1 }
+rust_2024_compatibility = { level = "deny", priority = -1 }
+unknown_or_malformed_diagnostic_attributes = { level = "deny", priority = -1 }
 unused = { level = "deny", priority = -1 }
 warnings = { level = "deny", priority = -1 }
-ambiguous-negative-literals = { level = "deny", priority = -1 }
-closure-returning-async-block = { level = "deny", priority = -1 }
-dead-code-pub-in-binary = { level = "deny", priority = -1 }
-deprecated-in-future = { level = "deny", priority = -1 }
-#deprecated-llvm-intrinsic = { level = "deny", priority = -1 }
-deref-into-dyn-supertrait = { level = "deny", priority = -1 }
-ffi-unwind-calls = { level = "deny", priority = -1 }
-#fuzzy-provenance-casts = { level = "deny", priority = -1 }
-impl-trait-redundant-captures = { level = "deny", priority = -1 }
-linker-info = { level = "deny", priority = -1 }
-#lossy-provenance-casts = { level = "deny", priority = -1 }
-macro-use-extern-crate = { level = "deny", priority = -1 }
-meta-variable-misuse = { level = "deny", priority = -1 }
-missing-copy-implementations = { level = "deny", priority = -1 }
-missing-debug-implementations = { level = "deny", priority = -1 }
-missing-docs = { level = "deny", priority = -1 }
-#multiple-supertrait-upcastable = { level = "deny", priority = -1 }
-#must-not-suspend = { level = "deny", priority = -1 }
-non-ascii-idents = { level = "deny", priority = -1 }
-#non-exhaustive-omitted-patterns = { level = "deny", priority = -1 }
-redundant-imports = { level = "deny", priority = -1 }
-redundant-lifetimes = { level = "deny", priority = -1 }
-#resolving-to-items-shadowing-supertrait-items = { level = "deny", priority = -1 }
-#shadowing-supertrait-items = { level = "deny", priority = -1 }
-single-use-lifetimes = { level = "deny", priority = -1 }
-trivial-casts = { level = "deny", priority = -1 }
-trivial-numeric-casts = { level = "deny", priority = -1 }
-unit-bindings = { level = "deny", priority = -1 }
-unnameable-types = { level = "deny", priority = -1 }
-#unqualified-local-imports = { level = "deny", priority = -1 }
-unreachable-pub = { level = "deny", priority = -1 }
-unsafe-code = { level = "deny", priority = -1 }
-unstable-features = { level = "deny", priority = -1 }
-unused-crate-dependencies = { level = "deny", priority = -1 }
-unused-import-braces = { level = "deny", priority = -1 }
-unused-lifetimes = { level = "deny", priority = -1 }
-unused-qualifications = { level = "deny", priority = -1 }
-unused-results = { level = "deny", priority = -1 }
-variant-size-differences = { level = "deny", priority = -1 }
+ambiguous_negative_literals = { level = "deny", priority = -1 }
+closure_returning_async_block = { level = "deny", priority = -1 }
+dead_code_pub_in_binary = { level = "deny", priority = -1 }
+deprecated_in_future = { level = "deny", priority = -1 }
+#deprecated_llvm_intrinsic = { level = "deny", priority = -1 }
+deref_into_dyn_supertrait = { level = "deny", priority = -1 }
+ffi_unwind_calls = { level = "deny", priority = -1 }
+#fuzzy_provenance_casts = { level = "deny", priority = -1 }
+impl_trait_redundant_captures = { level = "deny", priority = -1 }
+# The macOS linker warns about libraries the Rust toolchain itself passes
+# twice ("ignoring duplicate libraries: '-lc', '-lm'"); no code here can
+# change that, and `warnings = "deny"` would turn it into a failed build.
+linker_info = "allow"
+#lossy_provenance_casts = { level = "deny", priority = -1 }
+macro_use_extern_crate = { level = "deny", priority = -1 }
+meta_variable_misuse = { level = "deny", priority = -1 }
+missing_copy_implementations = { level = "deny", priority = -1 }
+missing_debug_implementations = { level = "deny", priority = -1 }
+missing_docs = { level = "deny", priority = -1 }
+#multiple_supertrait_upcastable = { level = "deny", priority = -1 }
+#must_not_suspend = { level = "deny", priority = -1 }
+non_ascii_idents = { level = "deny", priority = -1 }
+#non_exhaustive_omitted_patterns = { level = "deny", priority = -1 }
+redundant_imports = { level = "deny", priority = -1 }
+redundant_lifetimes = { level = "deny", priority = -1 }
+#resolving_to_items_shadowing_supertrait_items = { level = "deny", priority = -1 }
+#shadowing_supertrait_items = { level = "deny", priority = -1 }
+single_use_lifetimes = { level = "deny", priority = -1 }
+trivial_casts = { level = "deny", priority = -1 }
+trivial_numeric_casts = { level = "deny", priority = -1 }
+unit_bindings = { level = "deny", priority = -1 }
+unnameable_types = { level = "deny", priority = -1 }
+#unqualified_local_imports = { level = "deny", priority = -1 }
+unreachable_pub = { level = "deny", priority = -1 }
+unsafe_code = { level = "deny", priority = -1 }
+unstable_features = { level = "deny", priority = -1 }
+unused_crate_dependencies = { level = "deny", priority = -1 }
+unused_import_braces = { level = "deny", priority = -1 }
+unused_lifetimes = { level = "deny", priority = -1 }
+unused_qualifications = { level = "deny", priority = -1 }
+unused_results = { level = "deny", priority = -1 }
+variant_size_differences = { level = "deny", priority = -1 }
 
 [lints.clippy]
 cargo = { level = "deny", priority = -1 }
@@ -158,7 +164,7 @@ serde = ["base64url_nopad/alloc", "dep:serde"]
 # Provide "relaxed" JSON deserialization implementations.
 serde_relaxed = ["serde", "dep:serde_json"]
 
-# Provide binary (de)serialization for RegistrationServerState 
+# Provide binary (de)serialization for RegistrationServerState
 # and AuthenticationServerState to avoid the use of in-memory
 # collections for ceremony completion.
 serializable_server_state = ["bin"]

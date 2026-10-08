@@ -126,7 +126,6 @@ impl<'prf_first, 'prf_second> Extension<'prf_first, 'prf_second> {
         Self { prf: None }
     }
     /// Returns an `Extension` with [`Self::prf`] set to `None`.
-    #[expect(single_use_lifetimes, reason = "false positive")]
     #[inline]
     #[must_use]
     pub const fn with_prf<'a: 'prf_first, 'b: 'prf_second>(
@@ -193,7 +192,7 @@ impl Credentials for AllowedCredentials {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::{auth::AllowedCredentials, Credentials};
+    /// # use structured_webauthn::request::{auth::AllowedCredentials, Credentials};
     /// assert!(AllowedCredentials::with_capacity(1).as_ref().is_empty());
     /// ```
     #[inline]
@@ -207,8 +206,8 @@ impl Credentials for AllowedCredentials {
     ///
     /// ```
     /// # #[cfg(all(feature = "bin", feature = "custom"))]
-    /// # use webauthn_rp::{bin::Decode, response::bin::DecodeAuthTransportsErr};
-    /// # use webauthn_rp::{
+    /// # use structured_webauthn::{bin::Decode, response::bin::DecodeAuthTransportsErr};
+    /// # use structured_webauthn::{
     /// #     request::{auth::AllowedCredentials, PublicKeyCredentialDescriptor, Credentials},
     /// #     response::{AuthTransports, CredentialId},
     /// # };
@@ -243,7 +242,7 @@ impl Credentials for AllowedCredentials {
     ///     }
     ///     .into()
     /// ));
-    /// # Ok::<_, webauthn_rp::AggErr>(())
+    /// # Ok::<_, structured_webauthn::AggErr>(())
     /// ```
     #[expect(
         clippy::arithmetic_side_effects,
@@ -381,14 +380,13 @@ impl<'rp_id, 'prf_first, 'prf_second>
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::{auth::DiscoverableCredentialRequestOptions, AsciiDomain, RpId, UserVerificationRequirement};
+    /// # use structured_webauthn::request::{auth::DiscoverableCredentialRequestOptions, AsciiDomain, RpId, UserVerificationRequirement};
     /// assert!(matches!(
     ///     DiscoverableCredentialRequestOptions::passkey(&RpId::Domain(AsciiDomain::try_from("example.com".to_owned())?)).public_key.user_verification,
     ///     UserVerificationRequirement::Required
     /// ));
-    /// # Ok::<_, webauthn_rp::AggErr>(())
+    /// # Ok::<_, structured_webauthn::AggErr>(())
     /// ```
-    #[expect(single_use_lifetimes, reason = "false positive")]
     #[inline]
     #[must_use]
     pub fn passkey<'a: 'rp_id>(rp_id: &'a RpId) -> Self {
@@ -491,8 +489,8 @@ impl<'rp_id, 'prf_first, 'prf_second>
     ///
     /// ```
     /// # #[cfg(all(feature = "bin", feature = "custom"))]
-    /// # use webauthn_rp::{bin::Decode, response::bin::DecodeAuthTransportsErr};
-    /// # use webauthn_rp::{
+    /// # use structured_webauthn::{bin::Decode, response::bin::DecodeAuthTransportsErr};
+    /// # use structured_webauthn::{
     /// #     request::{
     /// #         auth::{AllowedCredentials, NonDiscoverableCredentialRequestOptions},
     /// #         AsciiDomain, RpId, PublicKeyCredentialDescriptor, Credentials
@@ -524,9 +522,8 @@ impl<'rp_id, 'prf_first, 'prf_second>
     ///         .len(),
     ///     1
     /// );
-    /// # Ok::<_, webauthn_rp::AggErr>(())
+    /// # Ok::<_, structured_webauthn::AggErr>(())
     /// ```
-    #[expect(single_use_lifetimes, reason = "false positive")]
     #[inline]
     #[must_use]
     pub fn second_factor<'a: 'rp_id>(
@@ -635,14 +632,13 @@ impl<'rp_id> PublicKeyCredentialRequestOptions<'rp_id, '_, '_> {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::{auth::PublicKeyCredentialRequestOptions, AsciiDomain, RpId, UserVerificationRequirement};
+    /// # use structured_webauthn::request::{auth::PublicKeyCredentialRequestOptions, AsciiDomain, RpId, UserVerificationRequirement};
     /// assert!(matches!(
     ///     PublicKeyCredentialRequestOptions::passkey(&RpId::Domain(AsciiDomain::try_from("example.com".to_owned())?)).user_verification,
     ///     UserVerificationRequirement::Required
     /// ));
-    /// # Ok::<_, webauthn_rp::AggErr>(())
+    /// # Ok::<_, structured_webauthn::AggErr>(())
     /// ```
-    #[expect(single_use_lifetimes, reason = "false positive")]
     #[inline]
     #[must_use]
     pub fn passkey<'a: 'rp_id>(rp_id: &'a RpId) -> Self {
@@ -664,14 +660,13 @@ impl<'rp_id> PublicKeyCredentialRequestOptions<'rp_id, '_, '_> {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::{auth::PublicKeyCredentialRequestOptions, AsciiDomain, RpId, UserVerificationRequirement};
+    /// # use structured_webauthn::request::{auth::PublicKeyCredentialRequestOptions, AsciiDomain, RpId, UserVerificationRequirement};
     /// assert!(matches!(
     ///     PublicKeyCredentialRequestOptions::second_factor(&RpId::Domain(AsciiDomain::try_from("example.com".to_owned())?)).user_verification,
     ///     UserVerificationRequirement::Discouraged
     /// ));
-    /// # Ok::<_, webauthn_rp::AggErr>(())
+    /// # Ok::<_, structured_webauthn::AggErr>(())
     /// ```
-    #[expect(single_use_lifetimes, reason = "false positive")]
     #[inline]
     #[must_use]
     pub fn second_factor<'a: 'rp_id>(rp_id: &'a RpId) -> Self {

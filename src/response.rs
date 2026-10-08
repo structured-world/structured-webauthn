@@ -31,7 +31,7 @@ use ser_relaxed::SerdeJsonErr;
 ///
 /// ```no_run
 /// # use core::convert;
-/// # use webauthn_rp::{
+/// # use structured_webauthn::{
 /// #     hash::hash_set::{InsertRemoveExpired, MaxLenHashSet},
 /// #     request::{auth::{error::DiscoverableCredentialRequestOptionsErr, DiscoverableAuthenticationClientState, DiscoverableCredentialRequestOptions, AuthenticationVerificationOptions}, register::{BackupReq, UserHandle, USER_HANDLE_MAX_LEN, UserHandle64}, RpId},
 /// #     response::{auth::{error::AuthCeremonyErr, DiscoverableAuthentication64}, error::CollectedClientDataErr, register::{AuthenticatorExtensionOutputStaticState, ClientExtensionsOutputsStaticState, CredentialProtectionPolicy, DynamicState, Ed25519PubKey, CompressedPubKeyOwned, StaticState}, AuthenticatorAttachment, Backup, CollectedClientData, CredentialId},
@@ -143,7 +143,7 @@ pub mod error;
 ///
 /// ```no_run
 /// # use core::convert;
-/// # use webauthn_rp::{
+/// # use structured_webauthn::{
 /// #     hash::hash_set::{InsertRemoveExpired, MaxLenHashSet},
 /// #     request::{register::{error::CreationOptionsErr, CredentialCreationOptions, PublicKeyCredentialUserEntity, RegistrationClientState, UserHandle, UserHandle64, USER_HANDLE_MAX_LEN, RegistrationVerificationOptions}, PublicKeyCredentialDescriptor, RpId},
 /// #     response::{register::{error::RegCeremonyErr, Registration}, error::CollectedClientDataErr, CollectedClientData},
@@ -339,7 +339,7 @@ impl AuthTransports {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::response::AuthTransports;
+    /// # use structured_webauthn::response::AuthTransports;
     /// # #[cfg(feature = "custom")]
     /// assert_eq!(AuthTransports::ALL.count(), 6);
     /// ```
@@ -353,7 +353,7 @@ impl AuthTransports {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::response::AuthTransports;
+    /// # use structured_webauthn::response::AuthTransports;
     /// # #[cfg(feature = "custom")]
     /// assert!(AuthTransports::NONE.is_empty());
     /// ```
@@ -367,7 +367,7 @@ impl AuthTransports {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::response::{AuthTransports, AuthenticatorTransport};
+    /// # use structured_webauthn::response::{AuthTransports, AuthenticatorTransport};
     /// # #[cfg(feature = "custom")]
     /// assert!(AuthTransports::ALL.contains(AuthenticatorTransport::Ble));
     /// ```
@@ -391,7 +391,7 @@ impl AuthTransports {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::response::{AuthTransports, AuthenticatorTransport};
+    /// # use structured_webauthn::response::{AuthTransports, AuthenticatorTransport};
     /// assert_eq!(
     ///     AuthTransports::NONE
     ///         .add(AuthenticatorTransport::Usb)
@@ -416,7 +416,7 @@ impl AuthTransports {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::response::{AuthTransports, AuthenticatorTransport};
+    /// # use structured_webauthn::response::{AuthTransports, AuthenticatorTransport};
     /// assert_eq!(
     ///     AuthTransports::ALL
     ///         .remove(AuthenticatorTransport::Internal)
@@ -495,7 +495,6 @@ impl<T> CredentialId<T> {
 }
 impl<'a> CredentialId<&'a [u8]> {
     /// Creates a `CredentialId` from a `slice`.
-    #[expect(single_use_lifetimes, reason = "false positive")]
     fn from_slice<'b: 'a>(value: &'b [u8]) -> Result<Self, CredentialIdErr> {
         if (CRED_ID_MIN_LEN..=CRED_ID_MAX_LEN).contains(&value.len()) {
             Ok(Self(value))
@@ -790,12 +789,11 @@ impl<'a> CollectedClientData<'a> {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::response::{error::CollectedClientDataErr, CollectedClientData};
+    /// # use structured_webauthn::response::{error::CollectedClientDataErr, CollectedClientData};
     /// assert!(!CollectedClientData::from_client_data_json::<true>(br#"{"type":"webauthn.create","challenge":"AAAAAAAAAAAAAAAAAAAAAA","origin":"https://example.com","crossOrigin":false}"#.as_slice())?.cross_origin);
     /// assert!(!CollectedClientData::from_client_data_json::<false>(br#"{"type":"webauthn.get","challenge":"AAAAAAAAAAAAAAAAAAAAAA","origin":"https://example.com","crossOrigin":false}"#.as_slice())?.cross_origin);
     /// # Ok::<_, CollectedClientDataErr>(())
     /// ```
-    #[expect(single_use_lifetimes, reason = "false positive")]
     #[inline]
     pub fn from_client_data_json<'b: 'a, const REGISTRATION: bool>(json: &'b [u8]) -> Result<Self, CollectedClientDataErr> {
         LimitedVerificationParser::<REGISTRATION>::parse(json)
@@ -833,7 +831,7 @@ impl<'a> CollectedClientData<'a> {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::response::{ser_relaxed::SerdeJsonErr, CollectedClientData};
+    /// # use structured_webauthn::response::{ser_relaxed::SerdeJsonErr, CollectedClientData};
     /// assert!(!CollectedClientData::from_client_data_json_relaxed::<true>(b"\xef\xbb\xbf{
     ///   \"type\": \"webauthn.create\",
     ///   \"origin\": \"https://example.com\",
@@ -843,7 +841,6 @@ impl<'a> CollectedClientData<'a> {
     /// }")?.cross_origin);
     /// # Ok::<_, SerdeJsonErr>(())
     /// ```
-    #[expect(single_use_lifetimes, reason = "false positive")]
     #[cfg(feature = "serde_relaxed")]
     #[inline]
     pub fn from_client_data_json_relaxed<'b: 'a, const REGISTRATION: bool>(json: &'b [u8]) -> Result<Self, SerdeJsonErr> {
@@ -1322,7 +1319,7 @@ where
                 if user_present {
                     Ok(())
                 } else {
-                    A::user_is_not_present().map_err(AuthenticatorDataErr::UserNotPresent)   
+                    A::user_is_not_present().map_err(AuthenticatorDataErr::UserNotPresent)
                 }
                 .and_then(|()| {
                     if flag & RFU1 == 0 {

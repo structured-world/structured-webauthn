@@ -1,10 +1,10 @@
-# `webauthn_rp`
+# `structured-webauthn`
 
-[<img alt="git" src="https://git.philomathiclife.com/badges/webauthn_rp.svg" height="20">](https://git.philomathiclife.com/webauthn_rp/log.html)
-[<img alt="crates.io" src="https://img.shields.io/crates/v/webauthn_rp.svg?style=for-the-badge&color=fc8d62&logo=rust" height="20">](https://crates.io/crates/webauthn_rp)
-[<img alt="docs.rs" src="https://img.shields.io/badge/docs.rs-webauthn_rp-66c2a5?style=for-the-badge&labelColor=555555&logo=docs.rs" height="20">](https://docs.rs/webauthn_rp/latest/webauthn_rp/)
+[<img alt="CI" src="https://github.com/structured-world/structured-webauthn/actions/workflows/ci.yml/badge.svg" height="20">](https://github.com/structured-world/structured-webauthn/actions/workflows/ci.yml)
+[<img alt="crates.io" src="https://img.shields.io/crates/v/structured-webauthn.svg?style=for-the-badge&color=fc8d62&logo=rust" height="20">](https://crates.io/crates/structured-webauthn)
+[<img alt="docs.rs" src="https://img.shields.io/badge/docs.rs-structured--webauthn-66c2a5?style=for-the-badge&labelColor=555555&logo=docs.rs" height="20">](https://docs.rs/structured-webauthn)
 
-`webauthn_rp` is a library for _server-side_
+`structured-webauthn` is a pure-Rust library for _server-side_
 [Web Authentication (WebAuthn)](https://www.w3.org/TR/webauthn-3/#sctn-rp-operations) Relying Party
 (RP) operations.
 
@@ -14,11 +14,14 @@ to adapt to native applications as well. It achieves this by not assuming how da
 having said that, there are pre-defined serialization formats for "common" deployments which can be used when
 [`serde`](#serde) is enabled.
 
-## `webauthn_rp` in action
+All cryptography is RustCrypto (P-256, P-384, Ed25519, RSA, ML-DSA): no OpenSSL or other C library is needed
+for any target, including musl and WebAssembly.
+
+## `structured-webauthn` in action
 
 ```rust
 use core::convert;
-use webauthn_rp::{
+use structured_webauthn::{
     AuthenticatedCredential64, DiscoverableAuthentication64, DiscoverableAuthenticationServerState,
     DiscoverableCredentialRequestOptions, CredentialCreationOptions64, RegisteredCredential64,
     Registration, RegistrationServerState64,
@@ -490,37 +493,33 @@ MSRV changes will correspond to a SemVer patch version bump pre-`1.0.0`; otherwi
 * All on-by-default features of this library are covered by SemVer
 * MSRV is considered exempt from SemVer as noted above
 
+## Origin
+
+This project started from [`webauthn_rp`](https://git.philomathiclife.com/repos/webauthn_rp/) by Zack Newman,
+source taken at commit `2ae8bb96c939cb21510afcbc0adc0f58ffe06c2b` (2026-08-10), and is developed independently
+from that point. The design, the verification logic and most of the documentation above are his; the original
+copyright and license notice are kept in [NOTICE](NOTICE).
+
 ## License
 
-Licensed under either of
-
-* Apache License, Version 2.0 ([LICENSE-APACHE](https://www.apache.org/licenses/LICENSE-2.0))
-* MIT license ([LICENSE-MIT](https://opensource.org/licenses/MIT))
-
-at your option.
+Apache License, version 2.0; see [LICENSE](LICENSE) and [NOTICE](NOTICE). `webauthn_rp` is licensed MIT or
+Apache-2.0 at the recipient's option and is used here under Apache-2.0.
 
 ## Contribution
 
-Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you,
-as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.
+Contributions are accepted under the
+[Structured World Contributor License Agreement](https://sw.foundation/cla) and published under the Apache 2.0
+license.
 
-Before any PR is sent, `cargo clippy --all-targets`, `cargo test --all-targets -- --include-ignored`, and
-`cargo test --doc` should be run _for each possible combination of "features"_ using the stable and MSRV toolchains.
-One easy way to achieve this is by invoking [`ci-cargo`](https://crates.io/crates/ci-cargo) as
-`ci-cargo clippy --all-targets test --all-targets --include-ignored --ignore-compile-errors` in the `webauthn_rp`
-directory.
+Before a PR is sent, run for each combination of features:
 
-Last, `RUSTDOCFLAGS="--cfg docsrs" cargo +nightly doc --all-features` should be run to ensure documentation can be
-built.
+```sh
+cargo clippy --all-targets
+cargo nextest run
+cargo test --doc
+```
 
-### Status
-
-This package is actively maintained and will conform to the
-[latest WebAuthn API version](https://www.w3.org/TR/webauthn-3/). Previous versions will not be supported—excluding
-bug fixes of course—however functionality will exist to facilitate the migration process from the previous version.
-
-The crate is only tested on the `x86_64-unknown-linux-gnu`, `x86_64-unknown-openbsd`, and `aarch64-apple-darwin`
-targets; but it should work on most platforms.
+`RUSTDOCFLAGS="--cfg docsrs" cargo +nightly doc --all-features` checks that the documentation builds.
 
 [^note]: `panic`s related to memory allocations or stack overflow are possible since such issues are not
          formally guarded against.

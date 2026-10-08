@@ -82,7 +82,7 @@ impl Serialize for CoseAlgorithmIdentifiers {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::register::{CoseAlgorithmIdentifier,CoseAlgorithmIdentifiers};
+    /// # use structured_webauthn::request::register::{CoseAlgorithmIdentifier,CoseAlgorithmIdentifiers};
     /// assert_eq!(
     ///     serde_json::to_string(&CoseAlgorithmIdentifiers::ALL)?,
     ///     r#"[{"type":"public-key","alg":-50},{"type":"public-key","alg":-49},{"type":"public-key","alg":-48},{"type":"public-key","alg":-8},{"type":"public-key","alg":-7},{"type":"public-key","alg":-35},{"type":"public-key","alg":-257}]"#
@@ -194,7 +194,7 @@ impl Serialize for UserHandle<1> {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::register::UserHandle;
+    /// # use structured_webauthn::request::register::UserHandle;
     /// # #[cfg(feature = "custom")]
     /// // We create this manually purely for example. One should almost always
     /// // randomly generate this (e.g., `UserHandle::new`).
@@ -252,7 +252,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::register::{PublicKeyCredentialUserEntity, UserHandle};
+    /// # use structured_webauthn::request::register::{PublicKeyCredentialUserEntity, UserHandle};
     /// # #[cfg(feature = "custom")]
     /// // We create this manually purely for example. One should almost always
     /// // randomly generate this (e.g., `UserHandle::new`).
@@ -277,7 +277,7 @@ where
     ///     }).unwrap(),
     ///     r#"{"name":"georg.cantor","id":"AA","displayName":""}"#
     /// );
-    /// # Ok::<_, webauthn_rp::AggErr>(())
+    /// # Ok::<_, structured_webauthn::AggErr>(())
     /// ```
     #[inline]
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -309,7 +309,7 @@ impl Serialize for ResidentKeyRequirement {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::register::ResidentKeyRequirement;
+    /// # use structured_webauthn::request::register::ResidentKeyRequirement;
     /// assert_eq!(
     ///     serde_json::to_string(&ResidentKeyRequirement::Required)?,
     ///     r#""required""#
@@ -355,7 +355,7 @@ impl Serialize for AuthenticatorSelectionCriteria {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::{request::register::AuthenticatorSelectionCriteria, response::AuthenticatorAttachment};
+    /// # use structured_webauthn::{request::register::AuthenticatorSelectionCriteria, response::AuthenticatorAttachment};
     /// assert_eq!(
     ///     serde_json::to_string(&AuthenticatorSelectionCriteria::passkey())?,
     ///     r#"{"residentKey":"required","requireResidentKey":true,"userVerification":"required"}"#
@@ -454,7 +454,7 @@ impl Serialize for Extension<'_, '_> {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::{
+    /// # use structured_webauthn::request::{
     /// #     register::{CredProtect, Extension, FourToSixtyThree},
     /// #     PrfInput, ExtensionInfo, ExtensionReq,
     /// # };
@@ -736,8 +736,8 @@ where
     ///
     /// ```
     /// # #[cfg(all(feature = "bin", feature = "custom"))]
-    /// # use webauthn_rp::{bin::Decode, response::bin::DecodeAuthTransportsErr};
-    /// # use webauthn_rp::{
+    /// # use structured_webauthn::{bin::Decode, response::bin::DecodeAuthTransportsErr};
+    /// # use structured_webauthn::{
     /// #     request::{
     /// #         register::{
     /// #             FourToSixtyThree, UserHandle64, CredentialCreationOptions, PublicKeyCredentialUserEntity, UserHandle
@@ -850,7 +850,7 @@ where
     /// assert_eq!(client_state.get(210..259), json.get(210..259));
     /// # #[cfg(all(feature = "bin", feature = "custom"))]
     /// assert_eq!(client_state.get(281..), json.get(281..));
-    /// # Ok::<_, webauthn_rp::AggErr>(())
+    /// # Ok::<_, structured_webauthn::AggErr>(())
     /// ```
     #[inline]
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -870,7 +870,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::register::{UserHandle, USER_HANDLE_MIN_LEN};
+    /// # use structured_webauthn::request::register::{UserHandle, USER_HANDLE_MIN_LEN};
     /// # #[cfg(feature = "custom")]
     /// assert_eq!(
     ///     serde_json::from_str::<UserHandle<USER_HANDLE_MIN_LEN>>(r#""AA""#)?,
@@ -1231,7 +1231,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::register::ser::PublicKeyCredentialUserEntityOwned;
+    /// # use structured_webauthn::request::register::ser::PublicKeyCredentialUserEntityOwned;
     /// let val = serde_json::from_str::<PublicKeyCredentialUserEntityOwned<16>>(r#"{"name":"paul.erdos","displayName":"Erdős Pál"}"#)?;
     /// assert!(val.name.is_some_and(|name| name == "paul.erdos"));
     /// assert!(val.display_name.is_some_and(|display| display == "Erdős Pál"));
@@ -1436,7 +1436,7 @@ impl<'de> Deserialize<'de> for CoseAlgorithmIdentifiers {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::register::CoseAlgorithmIdentifiers;
+    /// # use structured_webauthn::request::register::CoseAlgorithmIdentifiers;
     /// assert!(serde_json::from_str::<CoseAlgorithmIdentifiers>(r#"[{"type":"public-key","alg":-50},{"type":"public-key","alg":-49},{"type":"public-key","alg":-48},{"type":"public-key","alg":-8},{"type":"public-key","alg":-7},{"type":"public-key","alg":-35},{"type":"public-key","alg":-257}]"#).is_ok());
     /// ```
     #[expect(clippy::too_many_lines, reason = "132 is fine")]
@@ -1647,7 +1647,7 @@ impl<'de> Deserialize<'de> for ResidentKeyRequirement {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::register::ResidentKeyRequirement;
+    /// # use structured_webauthn::request::register::ResidentKeyRequirement;
     /// assert!(
     ///     matches!(
     ///         serde_json::from_str(r#""required""#)?,
@@ -1671,7 +1671,7 @@ impl<'de> Deserialize<'de> for UserVerificationRequirement {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::UserVerificationRequirement;
+    /// # use structured_webauthn::request::UserVerificationRequirement;
     /// assert!(
     ///     matches!(
     ///         serde_json::from_str(r#""required""#)?,
@@ -1703,7 +1703,7 @@ impl<'de> Deserialize<'de> for AuthenticatorSelectionCriteria {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::{request::register::AuthenticatorSelectionCriteria, response::AuthenticatorAttachment};
+    /// # use structured_webauthn::{request::register::AuthenticatorSelectionCriteria, response::AuthenticatorAttachment};
     /// assert_eq!(
     ///     serde_json::from_str::<AuthenticatorSelectionCriteria>(r#"{"authenticatorAttachment":null,"residentKey":"required","requireResidentKey":true,"userVerification":"required"}"#)?.authenticator_attachment,
     ///     AuthenticatorAttachment::None,
@@ -1933,7 +1933,7 @@ impl<'de> Deserialize<'de> for FourToSixtyThree {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::register::FourToSixtyThree;
+    /// # use structured_webauthn::request::register::FourToSixtyThree;
     /// # use serde_json::Error;
     /// assert_eq!(serde_json::from_str::<FourToSixtyThree>("4")?, FourToSixtyThree::Four);
     /// assert_eq!(serde_json::from_str::<FourToSixtyThree>("63")?, FourToSixtyThree::SixtyThree);
@@ -2051,7 +2051,7 @@ impl<'de> Deserialize<'de> for ExtensionOwned {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::{ExtensionInfo, ExtensionReq, register::{CredProtect, FourToSixtyThree, ser::ExtensionOwned}};
+    /// # use structured_webauthn::request::{ExtensionInfo, ExtensionReq, register::{CredProtect, FourToSixtyThree, ser::ExtensionOwned}};
     /// let ext = serde_json::from_str::<ExtensionOwned>(
     ///     r#"{"credProps":true,"credentialProtectionPolicy":"userVerificationRequired","enforceCredentialProtectionPolicy":false,"minPinLength":true,"prf":{"eval":{"first":"","second":null}}}"#,
     /// )?;

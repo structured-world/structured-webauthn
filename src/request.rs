@@ -46,7 +46,7 @@ use url::Url as Uri;
 ///
 /// ```
 /// # use core::convert;
-/// # use webauthn_rp::{
+/// # use structured_webauthn::{
 /// #     hash::hash_set::{InsertRemoveExpired, MaxLenHashSet},
 /// #     request::{
 /// #         auth::{AllowedCredentials, DiscoverableCredentialRequestOptions, NonDiscoverableCredentialRequestOptions},
@@ -105,7 +105,7 @@ pub mod error;
 ///
 /// ```
 /// # use core::convert;
-/// # use webauthn_rp::{
+/// # use structured_webauthn::{
 /// #     hash::hash_set::{InsertRemoveExpired, MaxLenHashSet},
 /// #     request::{
 /// #         register::{
@@ -202,7 +202,7 @@ impl Challenge {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::Challenge;
+    /// # use structured_webauthn::request::Challenge;
     /// // The probability of a `Challenge` being 0 (assuming a good entropy
     /// // source) is 2^-128 ≈ 2.9 x 10^-39.
     /// assert_ne!(Challenge::new().into_data(), 0);
@@ -289,7 +289,7 @@ impl AsciiDomain {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::{AsciiDomain, error::AsciiDomainErr};
+    /// # use structured_webauthn::request::{AsciiDomain, error::AsciiDomainErr};
     /// let mut dom = AsciiDomain::try_from("example.com.".to_owned())?;
     /// assert_eq!(dom.as_ref(), "example.com.");
     /// dom.remove_trailing_dot();
@@ -361,7 +361,7 @@ impl TryFrom<Vec<u8>> for AsciiDomain {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::{error::AsciiDomainErr, AsciiDomain};
+    /// # use structured_webauthn::request::{error::AsciiDomainErr, AsciiDomain};
     /// // Root `'.'` is not removed if it exists.
     /// assert_ne!("example.com", AsciiDomain::try_from(b"example.com.".to_vec())?.as_ref());
     /// // Root domain (i.e., `'.'`) is not allowed.
@@ -503,7 +503,7 @@ impl AsciiDomainStatic {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::{AsciiDomainStatic, RpId};
+    /// # use structured_webauthn::request::{AsciiDomainStatic, RpId};
     /// /// RP ID of our application.
     /// const RP_IP: &RpId = &RpId::StaticDomain(AsciiDomainStatic::new("example.com").unwrap());
     /// ```
@@ -849,7 +849,7 @@ impl<'a: 'b, 'b> TryFrom<&'a str> for Scheme<'b> {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::Scheme;
+    /// # use structured_webauthn::request::Scheme;
     /// assert!(matches!(Scheme::try_from("https")?, Scheme::Https));
     /// assert!(matches!(Scheme::try_from("https ")?, Scheme::Other(scheme) if scheme == "https "));
     /// assert!(matches!(Scheme::try_from("ssh")?, Scheme::Ssh));
@@ -857,7 +857,7 @@ impl<'a: 'b, 'b> TryFrom<&'a str> for Scheme<'b> {
     /// // Even though one can construct an empty `Scheme` via `Scheme::Other` or `Scheme::NoneOther`,
     /// // one cannot parse one.
     /// assert!(Scheme::try_from("").is_err());
-    /// # Ok::<_, webauthn_rp::AggErr>(())
+    /// # Ok::<_, structured_webauthn::AggErr>(())
     /// ```
     #[inline]
     fn try_from(value: &'a str) -> Result<Self, Self::Error> {
@@ -922,13 +922,13 @@ impl FromStr for Port {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::{error::PortParseErr, Port};
+    /// # use structured_webauthn::request::{error::PortParseErr, Port};
     /// assert!(matches!("443".parse()?, Port::Val(443)));
     /// // TCP/UDP ports have to be in canonical form:
     /// assert!("022"
     ///     .parse::<Port>()
     ///     .map_or_else(|err| matches!(err, PortParseErr::NotCanonical), |_| false));
-    /// # Ok::<_, webauthn_rp::AggErr>(())
+    /// # Ok::<_, structured_webauthn::AggErr>(())
     /// ```
     #[inline]
     fn from_str(s: &str) -> Result<Self, Self::Err> {
@@ -971,7 +971,7 @@ impl<'b> DomainOrigin<'_, 'b> {
     /// ```
     /// # extern crate alloc;
     /// # use alloc::borrow::Cow;
-    /// # use webauthn_rp::{request::DomainOrigin, response::Origin};
+    /// # use structured_webauthn::{request::DomainOrigin, response::Origin};
     /// assert_eq!(
     ///     DomainOrigin::new("www.example.com"),
     ///     Origin(Cow::Borrowed("https://www.example.com"))
@@ -982,7 +982,6 @@ impl<'b> DomainOrigin<'_, 'b> {
     ///     Origin(Cow::Borrowed("https://www.example.com:443"))
     /// );
     /// ```
-    #[expect(single_use_lifetimes, reason = "false positive")]
     #[must_use]
     #[inline]
     pub const fn new<'c: 'b>(host: &'c str) -> Self {
@@ -1000,7 +999,7 @@ impl<'b> DomainOrigin<'_, 'b> {
     /// ```
     /// # extern crate alloc;
     /// # use alloc::borrow::Cow;
-    /// # use webauthn_rp::{request::DomainOrigin, response::Origin};
+    /// # use structured_webauthn::{request::DomainOrigin, response::Origin};
     /// // Any port is allowed to exist.
     /// assert_eq!(
     ///     DomainOrigin::new_ignore_port("www.example.com"),
@@ -1012,7 +1011,6 @@ impl<'b> DomainOrigin<'_, 'b> {
     ///     Origin(Cow::Borrowed("https://www.example.com"))
     /// );
     /// ```
-    #[expect(single_use_lifetimes, reason = "false positive")]
     #[must_use]
     #[inline]
     pub const fn new_ignore_port<'c: 'b>(host: &'c str) -> Self {
@@ -1084,7 +1082,7 @@ impl<'a: 'b + 'c, 'b, 'c> TryFrom<&'a str> for DomainOrigin<'b, 'c> {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::{DomainOrigin, Port, Scheme};
+    /// # use structured_webauthn::request::{DomainOrigin, Port, Scheme};
     /// assert!(
     ///     DomainOrigin::try_from("https://www.example.com:443").map_or(false, |dom| matches!(
     ///         dom.scheme,
@@ -1182,7 +1180,7 @@ impl Hints {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::{Hints, PublicKeyCredentialHint};
+    /// # use structured_webauthn::request::{Hints, PublicKeyCredentialHint};
     /// assert_eq!(
     ///     Hints::EMPTY
     ///         .add(PublicKeyCredentialHint::SecurityKey)
@@ -1215,7 +1213,7 @@ impl Hints {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::Hints;
+    /// # use structured_webauthn::request::Hints;
     /// assert!(Hints::EMPTY.first().is_none());
     /// ```
     #[inline]
@@ -1228,7 +1226,7 @@ impl Hints {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::Hints;
+    /// # use structured_webauthn::request::Hints;
     /// assert!(Hints::EMPTY.second().is_none());
     /// ```
     #[inline]
@@ -1241,7 +1239,7 @@ impl Hints {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::Hints;
+    /// # use structured_webauthn::request::Hints;
     /// assert!(Hints::EMPTY.third().is_none());
     /// ```
     #[inline]
@@ -1254,7 +1252,7 @@ impl Hints {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::Hints;
+    /// # use structured_webauthn::request::Hints;
     /// assert_eq!(Hints::EMPTY.count(), 0);
     /// ```
     #[expect(
@@ -1273,7 +1271,7 @@ impl Hints {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::Hints;
+    /// # use structured_webauthn::request::Hints;
     /// assert!(Hints::EMPTY.is_empty());
     /// ```
     #[inline]
@@ -1286,7 +1284,7 @@ impl Hints {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::{Hints, PublicKeyCredentialHint};
+    /// # use structured_webauthn::request::{Hints, PublicKeyCredentialHint};
     /// assert!(!Hints::EMPTY.contains(PublicKeyCredentialHint::Hybrid));
     /// ```
     #[inline]
@@ -1311,7 +1309,7 @@ impl Hints {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::Hints;
+    /// # use structured_webauthn::request::Hints;
     /// assert!(!Hints::EMPTY.contains_platform_hints());
     /// ```
     #[inline]
@@ -1339,7 +1337,7 @@ impl Hints {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::Hints;
+    /// # use structured_webauthn::request::Hints;
     /// assert!(!Hints::EMPTY.contains_platform_hints());
     /// ```
     #[inline]
@@ -1430,7 +1428,7 @@ pub enum CredentialMediationRequirement {
 /// # Examples
 ///
 /// ```
-/// # use webauthn_rp::{
+/// # use structured_webauthn::{
 /// #     request::{
 /// #         auth::AllowedCredentials, register::UserHandle, Credentials, PublicKeyCredentialDescriptor,
 /// #     },
@@ -1814,7 +1812,6 @@ pub struct PrfInput<'first, 'second> {
 }
 impl<'first, 'second> PrfInput<'first, 'second> {
     /// Returns a `PrfInput` with [`Self::first`] set to `first` and [`Self::second`] set to `None`.
-    #[expect(single_use_lifetimes, reason = "false positive")]
     #[inline]
     #[must_use]
     pub const fn with_first<'a: 'first>(first: &'a [u8]) -> Self {
@@ -1824,7 +1821,6 @@ impl<'first, 'second> PrfInput<'first, 'second> {
         }
     }
     /// Same as [`Self::with_first`] except [`Self::second`] is set to `Some` containing `second`.
-    #[expect(single_use_lifetimes, reason = "false positive")]
     #[inline]
     #[must_use]
     pub const fn with_two<'a: 'first, 'b: 'second>(first: &'a [u8], second: &'b [u8]) -> Self {

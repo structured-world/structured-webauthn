@@ -1,10 +1,10 @@
-//! [![git]](https://git.philomathiclife.com/webauthn_rp/log.html)&ensp;[![crates-io]](https://crates.io/crates/webauthn_rp)&ensp;[![docs-rs]](crate)
+//! [![github]](https://github.com/structured-world/structured-webauthn)&ensp;[![crates-io]](https://crates.io/crates/structured-webauthn)&ensp;[![docs-rs]](crate)
 //!
-//! [git]: https://git.philomathiclife.com/git_badge.svg
+//! [github]: https://img.shields.io/badge/github-8da0cb?style=for-the-badge&labelColor=555555&logo=github
 //! [crates-io]: https://img.shields.io/badge/crates.io-fc8d62?style=for-the-badge&labelColor=555555&logo=rust
 //! [docs-rs]: https://img.shields.io/badge/docs.rs-66c2a5?style=for-the-badge&labelColor=555555&logo=docs.rs
 //!
-//! `webauthn_rp` is a library for _server-side_
+//! `structured-webauthn` is a pure-Rust library for _server-side_
 //! [Web Authentication (WebAuthn)](https://www.w3.org/TR/webauthn-3/#sctn-rp-operations) Relying Party
 //! (RP) operations.
 //!
@@ -14,11 +14,14 @@
 //! having said that, there are pre-defined serialization formats for "common" deployments which can be used when
 //! [`serde`](#serde) is enabled.
 //!
-//! ## `webauthn_rp` in action
+//! It started from [`webauthn_rp`](https://git.philomathiclife.com/repos/webauthn_rp/) by Zack Newman;
+//! see `NOTICE` for the origin and its license.
+//!
+//! ## `structured-webauthn` in action
 //!
 //! ```
 //! use core::convert;
-//! use webauthn_rp::{
+//! use structured_webauthn::{
 //!     AuthenticatedCredential64, DiscoverableAuthentication64, DiscoverableAuthenticationServerState,
 //!     DiscoverableCredentialRequestOptions, CredentialCreationOptions64, RegisteredCredential64,
 //!     Registration, RegistrationServerState64,
@@ -1058,7 +1061,6 @@ impl<'cred, 'user, const USER_LEN: usize, PublicKey>
     ///
     /// Errors iff the passed arguments are invalid. Read [`CredentialErr`]
     /// for more information.
-    #[expect(single_use_lifetimes, reason = "false positive")]
     #[cfg(any(feature = "bin", feature = "custom"))]
     #[inline]
     pub fn new<'a: 'cred, 'b: 'user>(

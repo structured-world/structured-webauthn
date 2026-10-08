@@ -417,7 +417,7 @@ impl Serialize for UnknownCredentialOptions<'_, '_> {
     ///
     /// ```
     /// # use core::str::FromStr;
-    /// # use webauthn_rp::{request::{AsciiDomain, RpId}, response::{auth::error::UnknownCredentialOptions, CredentialId}};
+    /// # use structured_webauthn::{request::{AsciiDomain, RpId}, response::{auth::error::UnknownCredentialOptions, CredentialId}};
     /// # #[cfg(feature = "custom")]
     /// let credential_id = CredentialId::try_from(vec![0; 16].into_boxed_slice())?;
     /// # #[cfg(feature = "custom")]
@@ -429,7 +429,7 @@ impl Serialize for UnknownCredentialOptions<'_, '_> {
     ///     .unwrap(),
     ///     r#"{"rpId":"example.com","credentialId":"AAAAAAAAAAAAAAAAAAAAAA"}"#
     /// );
-    /// # Ok::<_, webauthn_rp::AggErr>(())
+    /// # Ok::<_, structured_webauthn::AggErr>(())
     /// ```
     #[inline]
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>

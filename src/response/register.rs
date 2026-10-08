@@ -99,7 +99,6 @@ impl Display for CredentialProtectionPolicy {
         })
     }
 }
-#[expect(clippy::too_long_first_doc_paragraph, reason = "false positive")]
 /// [`hmac-secret`](https://fidoalliance.org/specs/fido-v2.2-rd-20230321/fido-client-to-authenticator-protocol-v2.2-rd-20230321.html#sctn-hmac-secret-extension)
 /// and
 /// [`hmac-secret-mc`](https://fidoalliance.org/specs/fido-v2.2-ps-20250228/fido-client-to-authenticator-protocol-v2.2-ps-20250228.html#sctn-hmac-secret-make-cred-extension).
@@ -3292,7 +3291,6 @@ impl<'a> AttestationObject<'a> {
     /// [attestation object layout](https://www.w3.org/TR/webauthn-3/#attestation-object)
     /// returning [`Self`] and the index within `data` that the authenticator data portion
     /// begins.
-    #[expect(single_use_lifetimes, reason = "false positive")]
     #[expect(
         clippy::panic_in_result_fn,
         reason = "we want to crash when there is a bug"
@@ -3826,7 +3824,7 @@ impl Metadata<'_> {
     ///
     /// ```
     /// # use core::str::FromStr;
-    /// # use webauthn_rp::{
+    /// # use structured_webauthn::{
     /// #     request::register::{FourToSixtyThree, ResidentKeyRequirement},
     /// #     response::register::{
     /// #         Aaguid, Attestation,
@@ -3861,7 +3859,7 @@ impl Metadata<'_> {
     ///     "resident_key": "required"
     /// });
     /// assert_eq!(metadata.into_json(), json.to_string());
-    /// # Ok::<_, webauthn_rp::AggErr>(())
+    /// # Ok::<_, structured_webauthn::AggErr>(())
     /// ```
     #[expect(unsafe_code, reason = "comment justifies its correctness and reason")]
     #[expect(

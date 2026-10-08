@@ -242,7 +242,7 @@ impl<'de> Deserialize<'de> for CustomRegistration {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::response::register::ser_relaxed::CustomRegistration;
+    /// # use structured_webauthn::response::register::ser_relaxed::CustomRegistration;
     /// assert!(
     ///     // The below payload is technically valid, but `RegistrationServerState::verify` will fail
     ///     // since the attestationObject is not valid. This is true for `Registration::deserialize`

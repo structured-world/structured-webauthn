@@ -26,7 +26,7 @@ impl Serialize for CredentialUiMode {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::auth::CredentialUiMode;
+    /// # use structured_webauthn::request::auth::CredentialUiMode;
     /// assert_eq!(
     ///     serde_json::to_string(&CredentialUiMode::Immediate)?,
     ///     r#""immediate""#
@@ -63,8 +63,8 @@ impl Serialize for AllowedCredential {
     ///
     /// ```
     /// # #[cfg(all(feature = "bin", feature = "custom"))]
-    /// # use webauthn_rp::{bin::Decode, response::bin::DecodeAuthTransportsErr};
-    /// # use webauthn_rp::{
+    /// # use structured_webauthn::{bin::Decode, response::bin::DecodeAuthTransportsErr};
+    /// # use structured_webauthn::{
     /// #     request::{auth::AllowedCredential, PublicKeyCredentialDescriptor},
     /// #     response::{AuthTransports, CredentialId},
     /// # };
@@ -90,7 +90,7 @@ impl Serialize for AllowedCredential {
     ///     })).unwrap(),
     ///     r#"{"type":"public-key","id":"AAAAAAAAAAAAAAAAAAAAAA","transports":["usb"]}"#
     /// );
-    /// # Ok::<_, webauthn_rp::AggErr>(())
+    /// # Ok::<_, structured_webauthn::AggErr>(())
     /// ```
     #[inline]
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -108,8 +108,8 @@ impl Serialize for AllowedCredentials {
     ///
     /// ```
     /// # #[cfg(all(feature = "bin", feature = "custom"))]
-    /// # use webauthn_rp::{bin::Decode, response::bin::DecodeAuthTransportsErr};
-    /// # use webauthn_rp::{
+    /// # use structured_webauthn::{bin::Decode, response::bin::DecodeAuthTransportsErr};
+    /// # use structured_webauthn::{
     /// #     request::{auth::AllowedCredentials, PublicKeyCredentialDescriptor, Credentials},
     /// #     response::{AuthTransports, CredentialId},
     /// # };
@@ -135,7 +135,7 @@ impl Serialize for AllowedCredentials {
     ///     serde_json::to_string(&creds).unwrap(),
     ///     r#"[{"type":"public-key","id":"AAAAAAAAAAAAAAAAAAAAAA","transports":["usb"]}]"#
     /// );
-    /// # Ok::<_, webauthn_rp::AggErr>(())
+    /// # Ok::<_, structured_webauthn::AggErr>(())
     /// ```
     #[inline]
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -383,7 +383,7 @@ impl Serialize for DiscoverableAuthenticationClientState<'_, '_, '_> {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::{
+    /// # use structured_webauthn::{
     /// #     request::{
     /// #         auth::{
     /// #             AllowedCredential, AllowedCredentials, CredentialSpecificExtension, Extension,
@@ -429,7 +429,7 @@ impl Serialize for DiscoverableAuthenticationClientState<'_, '_, '_> {
     /// assert_eq!(client_state.get(..50), json.get(..50));
     /// # #[cfg(all(feature = "bin", feature = "custom"))]
     /// assert_eq!(client_state.get(72..), json.get(72..));
-    /// # Ok::<_, webauthn_rp::AggErr>(())
+    /// # Ok::<_, structured_webauthn::AggErr>(())
     /// ```
     #[inline]
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -446,8 +446,8 @@ impl Serialize for NonDiscoverableAuthenticationClientState<'_, '_, '_> {
     ///
     /// ```
     /// # #[cfg(all(feature = "bin", feature = "custom"))]
-    /// # use webauthn_rp::{bin::Decode, response::bin::DecodeAuthTransportsErr};
-    /// # use webauthn_rp::{
+    /// # use structured_webauthn::{bin::Decode, response::bin::DecodeAuthTransportsErr};
+    /// # use structured_webauthn::{
     /// #     request::{
     /// #         auth::{
     /// #             AllowedCredential, AllowedCredentials, CredentialSpecificExtension, Extension,
@@ -489,7 +489,7 @@ impl Serialize for NonDiscoverableAuthenticationClientState<'_, '_, '_> {
     /// # #[cfg(all(feature = "bin", feature = "custom"))]
     /// let opts = &mut options.options;
     /// # #[cfg(not(all(feature = "bin", feature = "custom")))]
-    /// # let mut opts = webauthn_rp::DiscoverableCredentialRequestOptions::passkey(&rp_id).public_key;
+    /// # let mut opts = structured_webauthn::DiscoverableCredentialRequestOptions::passkey(&rp_id).public_key;
     /// opts.hints = Hints::EMPTY.add(PublicKeyCredentialHint::SecurityKey);
     /// // This is actually useless since `CredentialSpecificExtension` takes priority
     /// // when the client receives the payload. We set it for illustration purposes only.
@@ -544,7 +544,7 @@ impl Serialize for NonDiscoverableAuthenticationClientState<'_, '_, '_> {
     /// assert_eq!(client_state.get(..50), json.get(..50));
     /// # #[cfg(all(feature = "bin", feature = "custom"))]
     /// assert_eq!(client_state.get(72..), json.get(72..));
-    /// # Ok::<_, webauthn_rp::AggErr>(())
+    /// # Ok::<_, structured_webauthn::AggErr>(())
     /// ```
     #[inline]
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -561,7 +561,7 @@ impl<'de> Deserialize<'de> for CredentialUiMode {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::auth::CredentialUiMode;
+    /// # use structured_webauthn::request::auth::CredentialUiMode;
     /// assert_eq!(
     ///     serde_json::from_str::<CredentialUiMode>(r#""immediate""#)?,
     ///     CredentialUiMode::Immediate,
@@ -661,7 +661,7 @@ impl<'de> Deserialize<'de> for ExtensionOwned {
     /// # Examples
     ///
     /// ```
-    /// # use webauthn_rp::request::{ExtensionReq, auth::ser::ExtensionOwned};
+    /// # use structured_webauthn::request::{ExtensionReq, auth::ser::ExtensionOwned};
     /// let ext = serde_json::from_str::<ExtensionOwned>(
     ///     r#"{"prf":{"eval":{"first":"","second":null}}}"#,
     /// )?;
