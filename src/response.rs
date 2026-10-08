@@ -2,14 +2,21 @@ extern crate alloc;
 #[cfg(test)]
 mod tests;
 use crate::{
-    request::{register::{PublicKeyCredentialUserEntity, UserHandle}, Challenge, RpId, Url},
+    request::{
+        Challenge, RpId, Url,
+        register::{PublicKeyCredentialUserEntity, UserHandle},
+    },
     response::{
         auth::error::{
             AuthCeremonyErr, AuthenticatorDataErr as AuthAuthDataErr,
             AuthenticatorExtensionOutputErr as AuthAuthExtErr,
         },
         error::{CollectedClientDataErr, CredentialIdErr},
-        register::error::{AttestationObjectErr, AttestedCredentialDataErr, AuthenticatorDataErr as RegAuthDataErr, AuthenticatorExtensionOutputErr as RegAuthExtErr, PubKeyErr, RegCeremonyErr},
+        register::error::{
+            AttestationObjectErr, AttestedCredentialDataErr,
+            AuthenticatorDataErr as RegAuthDataErr,
+            AuthenticatorExtensionOutputErr as RegAuthExtErr, PubKeyErr, RegCeremonyErr,
+        },
     },
 };
 use alloc::borrow::Cow;
@@ -21,7 +28,7 @@ use core::{
     hash::{Hash, Hasher},
     str,
 };
-use rsa::sha2::{digest::OutputSizeUser as _, Sha256};
+use rsa::sha2::{Sha256, digest::OutputSizeUser as _};
 #[cfg(feature = "serde_relaxed")]
 use ser_relaxed::SerdeJsonErr;
 /// Contains functionality for completing the
@@ -584,7 +591,10 @@ pub struct SentChallenge(pub u128);
 impl SentChallenge {
     /// Transforms `value` into a `SentChallenge` by interpreting `value` as a
     /// little-endian `u128`.
-    #[expect(clippy::little_endian_bytes, reason = "Challenge and SentChallenge need to be compatible, and we need to ensure the data is sent and received in the same order")]
+    #[expect(
+        clippy::little_endian_bytes,
+        reason = "Challenge and SentChallenge need to be compatible, and we need to ensure the data is sent and received in the same order"
+    )]
     #[inline]
     #[must_use]
     pub const fn from_array(value: [u8; 16]) -> Self {
@@ -749,7 +759,13 @@ pub(super) trait AuthData<'a>: Sized {
     /// `true` iff `AT` bit (i.e., bit 6) in [`Self::flag_data`] can and must be set to 1.
     fn contains_at_bit() -> bool;
     /// Constructor.
-    fn new(rp_id_hash: &'a [u8], flags: Flag, sign_count: u32, attested_credential_data: Self::CredData, extensions: Self::Ext) -> Self;
+    fn new(
+        rp_id_hash: &'a [u8],
+        flags: Flag,
+        sign_count: u32,
+        attested_credential_data: Self::CredData,
+        extensions: Self::Ext,
+    ) -> Self;
     /// [`rpIdHash`](https://www.w3.org/TR/webauthn-3/#authdata-rpidhash).
     fn rp_hash(&self) -> &'a [u8];
     /// [`flags`](https://www.w3.org/TR/webauthn-3/#authdata-flags).
@@ -795,7 +811,9 @@ impl<'a> CollectedClientData<'a> {
     /// # Ok::<_, CollectedClientDataErr>(())
     /// ```
     #[inline]
-    pub fn from_client_data_json<'b: 'a, const REGISTRATION: bool>(json: &'b [u8]) -> Result<Self, CollectedClientDataErr> {
+    pub fn from_client_data_json<'b: 'a, const REGISTRATION: bool>(
+        json: &'b [u8],
+    ) -> Result<Self, CollectedClientDataErr> {
         LimitedVerificationParser::<REGISTRATION>::parse(json)
     }
     /// Parses `json` in a "relaxed" way.
@@ -843,11 +861,13 @@ impl<'a> CollectedClientData<'a> {
     /// ```
     #[cfg(feature = "serde_relaxed")]
     #[inline]
-    pub fn from_client_data_json_relaxed<'b: 'a, const REGISTRATION: bool>(json: &'b [u8]) -> Result<Self, SerdeJsonErr> {
+    pub fn from_client_data_json_relaxed<'b: 'a, const REGISTRATION: bool>(
+        json: &'b [u8],
+    ) -> Result<Self, SerdeJsonErr> {
         ser_relaxed::RelaxedClientDataJsonParser::<REGISTRATION>::parse(json)
     }
 }
-/// Parser of 
+/// Parser of
 /// [`JSON-compatible serialization of client data`](https://www.w3.org/TR/webauthn-3/#collectedclientdata-json-compatible-serialization-of-client-data).
 trait ClientDataJsonParser {
     /// Error returned by [`Self::parse`].
@@ -885,8 +905,12 @@ impl<const R: bool> LimitedVerificationParser<R> {
     /// portion of `val` _after_ the closing quote. The limited verification algorithm is adhered to; thus the
     /// _only_ Unicode scalar values that are allowed (and must) be hex-escaped are U+0000 to U+001F inclusively.
     /// Similarly only `b'\\'` and `b'"'` are allowed (and must) be escaped with `b'\\'`.
-    #[expect(unsafe_code, reason = "comment justifies its correctness")] 
-    #[expect(clippy::arithmetic_side_effects, clippy::indexing_slicing, reason = "comments justify their correctness")]
+    #[expect(unsafe_code, reason = "comment justifies its correctness")]
+    #[expect(
+        clippy::arithmetic_side_effects,
+        clippy::indexing_slicing,
+        reason = "comments justify their correctness"
+    )]
     fn parse_string(val: &[u8]) -> Result<(Cow<'_, str>, &'_ [u8]), CollectedClientDataErr> {
         /// Tracks the state of the current Unicode scalar value that is being parsed.
         enum State {
@@ -1026,7 +1050,10 @@ impl<const R: bool> LimitedVerificationParser<R> {
 }
 impl<const R: bool> ClientDataJsonParser for LimitedVerificationParser<R> {
     type Err = CollectedClientDataErr;
-    #[expect(clippy::little_endian_bytes, reason = "Challenge::serialize and this need to be consistent across architectures")]
+    #[expect(
+        clippy::little_endian_bytes,
+        reason = "Challenge::serialize and this need to be consistent across architectures"
+    )]
     #[expect(clippy::too_many_lines, reason = "110 lines is fine")]
     fn parse(json: &[u8]) -> Result<CollectedClientData<'_>, Self::Err> {
         // `{"type":"webauthn.<create|get>","challenge":"<22 bytes>","origin":"<bytes>","crossOrigin":<true|false>[,"topOrigin":"<bytes>"][,<anything>]}`.
@@ -1150,8 +1177,14 @@ impl<const R: bool> ClientDataJsonParser for LimitedVerificationParser<R> {
             }
         })
     }
-    #[expect(clippy::arithmetic_side_effects, reason = "comment justifies correctness")]
-    #[expect(clippy::little_endian_bytes, reason = "Challenge::serialize and this need to be consistent across architectures")]
+    #[expect(
+        clippy::arithmetic_side_effects,
+        reason = "comment justifies correctness"
+    )]
+    #[expect(
+        clippy::little_endian_bytes,
+        reason = "Challenge::serialize and this need to be consistent across architectures"
+    )]
     fn get_sent_challenge(json: &[u8]) -> Result<SentChallenge, Self::Err> {
         // Index 39.
         // `{"type":"webauthn.create","challenge":"AAAAAAAAAAAAAAAAAAAAAA"...`.
@@ -1159,12 +1192,14 @@ impl<const R: bool> ClientDataJsonParser for LimitedVerificationParser<R> {
         // `{"type":"webauthn.get","challenge":"AAAAAAAAAAAAAAAAAAAAAA"...`.
         let idx = if R { 39 } else { 36 };
         // This maxes at 39 + 22 = 61; thus overflow is not an issue.
-        json.get(idx..idx + Challenge::BASE64_LEN).ok_or(CollectedClientDataErr::Len).and_then(|chall_slice| {
-            let mut chall = [0; 16];
-            base64url_nopad::decode_buffer_exact(chall_slice, chall.as_mut_slice()).map_err(|_e| CollectedClientDataErr::Challenge).map(|()| {
-                SentChallenge(u128::from_le_bytes(chall))
+        json.get(idx..idx + Challenge::BASE64_LEN)
+            .ok_or(CollectedClientDataErr::Len)
+            .and_then(|chall_slice| {
+                let mut chall = [0; 16];
+                base64url_nopad::decode_buffer_exact(chall_slice, chall.as_mut_slice())
+                    .map_err(|_e| CollectedClientDataErr::Challenge)
+                    .map(|()| SentChallenge(u128::from_le_bytes(chall)))
             })
-        })
     }
 }
 /// Authenticator extension outputs;
@@ -1250,9 +1285,13 @@ impl<U, C: Display, A: Display> Display for AuthenticatorDataErr<U, C, A> {
         }
     }
 }
-impl From<AuthenticatorDataErr<Infallible, AttestedCredentialDataErr, RegAuthExtErr>> for RegAuthDataErr {
+impl From<AuthenticatorDataErr<Infallible, AttestedCredentialDataErr, RegAuthExtErr>>
+    for RegAuthDataErr
+{
     #[inline]
-    fn from(value: AuthenticatorDataErr<Infallible, AttestedCredentialDataErr, RegAuthExtErr>) -> Self {
+    fn from(
+        value: AuthenticatorDataErr<Infallible, AttestedCredentialDataErr, RegAuthExtErr>,
+    ) -> Self {
         match value {
             AuthenticatorDataErr::Len => Self::Len,
             AuthenticatorDataErr::UserNotPresent(v) => match v {},
@@ -1292,7 +1331,11 @@ where
     A::CredData: FromCbor<'a>,
     A::Ext: FromCbor<'a>,
 {
-    type Err = AuthenticatorDataErr<A::UpBitErr, <A::CredData as FromCbor<'a>>::Err, <A::Ext as FromCbor<'a>>::Err>;
+    type Err = AuthenticatorDataErr<
+        A::UpBitErr,
+        <A::CredData as FromCbor<'a>>::Err,
+        <A::Ext as FromCbor<'a>>::Err,
+    >;
     #[expect(clippy::big_endian_bytes, reason = "CBOR integers are in big-endian")]
     fn from_cbor(cbor: &'a [u8]) -> Result<CborSuccess<'a, Self>, Self::Err> {
         /// Length of `signCount`.
@@ -1476,7 +1519,9 @@ pub(super) trait AuthDataContainer<'a>: Sized {
 pub(super) trait AuthResponse {
     /// [Attestation object](https://www.w3.org/TR/webauthn-3/#attestation-object) or
     /// [authenticator data](https://www.w3.org/TR/webauthn-3/#authenticator-data).
-    type Auth<'a>: AuthDataContainer<'a> where Self: 'a;
+    type Auth<'a>: AuthDataContainer<'a>
+    where
+        Self: 'a;
     /// Public key to use to verify the contained signature.
     type CredKey<'a>;
     /// Parses
@@ -1499,7 +1544,14 @@ pub(super) trait AuthResponse {
         clippy::type_complexity,
         reason = "type aliases with bounds are even more problematic at least until lazy_type_alias is stable"
     )]
-    fn parse_data_and_verify_sig(&self, key: Self::CredKey<'_>, relaxed: bool) -> Result<(CollectedClientData<'_>, Self::Auth<'_>), AuthRespErr<<Self::Auth<'_> as AuthDataContainer<'_>>::Err>>;
+    fn parse_data_and_verify_sig(
+        &self,
+        key: Self::CredKey<'_>,
+        relaxed: bool,
+    ) -> Result<
+        (CollectedClientData<'_>, Self::Auth<'_>),
+        AuthRespErr<<Self::Auth<'_> as AuthDataContainer<'_>>::Err>,
+    >;
 }
 /// Ceremony response (i.e., [`PublicKeyCredential`](https://www.w3.org/TR/webauthn-3/#publickeycredential)).
 pub(super) trait Response {
@@ -1556,10 +1608,18 @@ impl<A: Display> Display for CeremonyErr<A> {
                 "the SHA-256 hash of the RP ID doesn't match the hash sent from the client",
             ),
             Self::UserNotVerified => f.write_str("user was not verified despite being required to"),
-            Self::BackupEligible => f.write_str("credential is eligible to be backed up despite requiring that it not be"),
-            Self::BackupNotEligible => f.write_str("credential is not eligible to be backed up despite requiring that it be"),
-            Self::BackupExists => f.write_str("credential backup exists despite requiring that a backup not exist"),
-            Self::BackupDoesNotExist => f.write_str("credential backup does not exist despite requiring that a backup exist"),
+            Self::BackupEligible => f.write_str(
+                "credential is eligible to be backed up despite requiring that it not be",
+            ),
+            Self::BackupNotEligible => f.write_str(
+                "credential is not eligible to be backed up despite requiring that it be",
+            ),
+            Self::BackupExists => {
+                f.write_str("credential backup exists despite requiring that a backup not exist")
+            }
+            Self::BackupDoesNotExist => f.write_str(
+                "credential backup does not exist despite requiring that a backup exist",
+            ),
         }
     }
 }
@@ -1708,16 +1768,14 @@ impl<const REG: bool> FromCbor<'_> for HmacSecretGet<REG> {
             Continue(&'a [u8]),
         }
         if REG {
-            cbor.split_at_checked(KEY.len()).map_or(
-                Ok(CborVal::Success),
-                |(key, key_rem)| {
+            cbor.split_at_checked(KEY.len())
+                .map_or(Ok(CborVal::Success), |(key, key_rem)| {
                     if key == KEY {
                         Ok(CborVal::Continue(key_rem))
                     } else {
                         Ok(CborVal::Success)
                     }
-                }
-            )
+                })
         } else {
             cbor.split_at_checked(cbor::HMAC_SECRET.len()).map_or(
                 Ok(CborVal::Success),
@@ -1727,45 +1785,42 @@ impl<const REG: bool> FromCbor<'_> for HmacSecretGet<REG> {
                     } else {
                         Ok(CborVal::Success)
                     }
-                }
+                },
             )
-        }.and_then(|cbor_val| {
-            match cbor_val {
-                CborVal::Success => Ok(CborSuccess { value: Self::None, remaining: cbor, }),
-                CborVal::Continue(key_rem) => {
-                    key_rem
-                        .split_first()
-                        .ok_or(HmacSecretGetErr::Len)
-                        .and_then(|(bytes, bytes_rem)| {
-                            if *bytes == cbor::BYTES_INFO_24 {
-                                bytes_rem
-                                    .split_first()
+        }
+        .and_then(|cbor_val| match cbor_val {
+            CborVal::Success => Ok(CborSuccess {
+                value: Self::None,
+                remaining: cbor,
+            }),
+            CborVal::Continue(key_rem) => key_rem
+                .split_first()
+                .ok_or(HmacSecretGetErr::Len)
+                .and_then(|(bytes, bytes_rem)| {
+                    if *bytes == cbor::BYTES_INFO_24 {
+                        bytes_rem
+                            .split_first()
+                            .ok_or(HmacSecretGetErr::Len)
+                            .and_then(|(&len, len_rem)| {
+                                len_rem
+                                    .split_at_checked(usize::from(len))
                                     .ok_or(HmacSecretGetErr::Len)
-                                    .and_then(|(&len, len_rem)| {
-                                        len_rem.split_at_checked(usize::from(len)).ok_or(HmacSecretGetErr::Len).and_then(|(_, remaining)| {
-                                            match usize::from(len) {
-                                                ONE_SECRET_LEN => {
-                                                    Ok(CborSuccess {
-                                                        value: Self::One,
-                                                        remaining,
-                                                    })
-                                                }
-                                                TWO_SECRET_LEN => {
-                                                    Ok(CborSuccess {
-                                                        value: Self::Two,
-                                                        remaining,
-                                                    })
-                                                }
-                                                _ => Err(HmacSecretGetErr::Value),
-                                            }
-                                        })
+                                    .and_then(|(_, remaining)| match usize::from(len) {
+                                        ONE_SECRET_LEN => Ok(CborSuccess {
+                                            value: Self::One,
+                                            remaining,
+                                        }),
+                                        TWO_SECRET_LEN => Ok(CborSuccess {
+                                            value: Self::Two,
+                                            remaining,
+                                        }),
+                                        _ => Err(HmacSecretGetErr::Value),
                                     })
-                            } else {
-                                Err(HmacSecretGetErr::Type)
-                            }
-                        })
-                }
-            }
+                            })
+                    } else {
+                        Err(HmacSecretGetErr::Type)
+                    }
+                }),
         })
     }
 }
