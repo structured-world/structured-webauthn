@@ -1,0 +1,3 @@
+[workspace]
+# Publish only when the release PR is merged, not on every push.
+release_always = false

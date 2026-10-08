@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Toolchain (rust-toolchain.toml) and the musl target
+        run: rustup show && rustup target add x86_64-unknown-linux-musl
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-nextest,cargo-hack
+      - run: cargo fmt --check
+      # Every feature combination is a supported build.
+      - run: cargo hack clippy --locked --feature-powerset --all-targets
+      - run: cargo nextest run --locked --all-features
+      - run: cargo test --locked --doc --all-features
+      # Pure Rust: the musl target needs no C library.
+      - run: cargo build --locked --all-features --target x86_64-unknown-linux-musl

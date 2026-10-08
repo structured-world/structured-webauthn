@@ -14,8 +14,8 @@ to adapt to native applications as well. It achieves this by not assuming how da
 having said that, there are pre-defined serialization formats for "common" deployments which can be used when
 [`serde`](#serde) is enabled.
 
-All cryptography is RustCrypto (P-256, P-384, Ed25519, RSA, ML-DSA): no OpenSSL or other C library is needed
-for any target, including musl and WebAssembly.
+All cryptography is RustCrypto (P-256, P-384, Ed25519, RSA, ML-DSA): no OpenSSL or other C library is needed,
+and musl targets build like any other.
 
 ## `structured-webauthn` in action
 
