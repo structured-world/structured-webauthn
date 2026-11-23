@@ -15,7 +15,7 @@ use p256::{
 };
 use p384::{PublicKey as P384PubKey, Sec1Point as P384Pt, SecretKey as P384Key};
 use rsa::{
-    BoxedUint, RsaPrivateKey,
+    BoxedUint, PrivateKey as RsaPrivKey,
     sha2::{Digest as _, Sha256},
     traits::PublicKeyParts as _,
 };
@@ -169,7 +169,7 @@ fn rsa_spki() {
         ]
         .as_slice(),
     );
-    let key = RsaPrivateKey::from_components(
+    let key = RsaPrivKey::from_components(
         BoxedUint::from_le_slice_vartime(n.as_slice()),
         e.into(),
         BoxedUint::from_le_slice_vartime(d.as_slice()),
@@ -11038,7 +11038,7 @@ fn rs256_registration_deserialize_data_mismatch() {
         ]
         .as_slice(),
     );
-    let key = RsaPrivateKey::from_components(
+    let key = RsaPrivKey::from_components(
         BoxedUint::from_le_slice_vartime(n.as_slice()),
         e.into(),
         BoxedUint::from_le_slice_vartime(d.as_slice()),
@@ -11178,7 +11178,7 @@ fn rs256_registration_deserialize_data_mismatch() {
         Some(err.as_slice())
     );
     // `publicKey` mismatch.
-    let bad_pub_key = RsaPrivateKey::from_components(
+    let bad_pub_key = RsaPrivKey::from_components(
         BoxedUint::from_le_slice_vartime(
             [
                 175, 161, 161, 75, 52, 244, 72, 168, 29, 119, 33, 120, 3, 222, 231, 152, 222, 119,

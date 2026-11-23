@@ -131,7 +131,7 @@ ml-dsa = { version = "0.1.1", default-features = false }
 p256 = { version = "0.14.0", default-features = false, features = ["ecdsa"] }
 p384 = { version = "0.14.0", default-features = false, features = ["ecdsa"] }
 rand = { version = "0.10.2", default-features = false, features = ["thread_rng"] }
-rsa = { version = "0.10.0-rc.18", default-features = false, features = ["encoding", "sha2"] }
+rsa = { version = "0.10", default-features = false, features = ["encoding", "pkcs1v15"] }
 serde = { version = "1.0.228", default-features = false, features = ["alloc"], optional = true }
 serde_json = { version = "1.0.150", default-features = false, features = ["alloc"], optional = true }
 url = { version = "2.5.8", default-features = false }
