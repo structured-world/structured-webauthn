@@ -57,7 +57,7 @@ use p384::{
     ecdsa::{DerSignature as P384Sig, VerifyingKey as P384VerKey},
 };
 use rsa::{
-    BoxedUint, RsaPublicKey,
+    BoxedUint, PublicKey as RsaKeyPublic,
     pkcs1v15::{self, VerifyingKey as RsaVerKey},
     sha2::{Sha256, digest::Digest as _},
 };
@@ -1619,7 +1619,7 @@ impl<T: AsRef<[u8]>> RsaPubKey<T> {
     )]
     pub(super) fn as_ver_key(&self) -> RsaVerKey<Sha256> {
         let n = self.0.as_ref();
-        RsaVerKey::new(RsaPublicKey::new_unchecked(
+        RsaVerKey::new(RsaKeyPublic::new_unchecked(
             // [`MAX_RSA_N_BITS`] is smaller than `u16::MAX`, so we can multiply by 8
             // and cast to a `u32` without fear.
             // [`MIN_RSA_BITS`]` is greater than 0, so we won't underflow from

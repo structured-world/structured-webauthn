@@ -46,7 +46,7 @@ use p256::{
 use p384::ecdsa::{DerSignature as P384DerSig, SigningKey as P384Key};
 #[cfg(feature = "custom")]
 use rsa::{
-    BoxedUint, RsaPrivateKey,
+    BoxedUint, PrivateKey as RsaPrivKey,
     pkcs1v15::SigningKey as RsaKey,
     sha2::{Digest as _, Sha256},
     signature::{Keypair as _, SignatureEncoding as _},
@@ -8724,7 +8724,7 @@ fn rs256_reg() -> Result<(), AggErr> {
         .as_slice(),
     );
     let rsa_key = RsaKey::<Sha256>::new(
-        RsaPrivateKey::from_components(
+        RsaPrivKey::from_components(
             BoxedUint::from_le_slice_vartime(n.as_slice()),
             e.into(),
             BoxedUint::from_le_slice_vartime(d.as_slice()),
@@ -8875,7 +8875,7 @@ fn rs256_auth() -> Result<(), AggErr> {
         .as_slice(),
     );
     let rsa_key = RsaKey::<Sha256>::new(
-        RsaPrivateKey::from_components(
+        RsaPrivKey::from_components(
             BoxedUint::from_le_slice_vartime(n.as_slice()),
             e.into(),
             BoxedUint::from_le_slice_vartime(d.as_slice()),
