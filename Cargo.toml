@@ -13,7 +13,7 @@ name = "structured-webauthn"
 readme = "README.md"
 repository = "https://github.com/structured-world/structured-webauthn"
 rust-version = "1.99.0"
-version = "0.1.0"
+version = "0.1.1"
 
 [lints.rust]
 deprecated_safe = { level = "deny", priority = -1 }
